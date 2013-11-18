@@ -2,7 +2,7 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Title" }, { "sTitle": "Authors" }, { "sTitle": "Source" }, { "sTitle": "Year" }, { "sTitle": "keywords" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Department / Program" }, { "sTitle": "Project" }
 ];
 
 String.prototype.trunc = function (n) {
@@ -10,42 +10,33 @@ String.prototype.trunc = function (n) {
 };
 
 $(function () {
-    var url = "https://spreadsheets.google.com/feeds/list/0AhTxmYCYi3fpdEJDZnBsb2FnNTVucGdRb1pHRExyUmc/1/public/values?alt=json-in-script&callback=?";
+    var url = "https://spreadsheets.google.com/feeds/list/0AhTxmYCYi3fpdGRrelZaT2F0ajBmalJzTlEzQU96dUE/1/public/values?alt=json-in-script&callback=?";
     $.getJSON(url, {}, function (data) {
         $.each(data.feed.entry, function (key, val) {
-            var title = val.gsx$title.$t;
-            var authors = val.gsx$authors.$t;
-            var source = val.gsx$source.$t;
-            var year = val.gsx$year.$t;
-            var keyword = val.gsx$keywords.$t;
-            var abstract = val.gsx$abstract.$t;
-            var link = val.gsx$linkstowhat.$t;
-
+            var name = val.gsx$name.$t;
+            var organization = val.gsx$organization.$t;
+            var dept = val.gsx$departmentprogram.$t;
+            var project = val.gsx$project1title.$t;
+            
             MyApp.spreadsheetData.push(
                 [
-                    GenerateTitleColumn(val), authors, source, year, keyword
+                    name, organization, dept, project
                 ]);
 
+            /*
             if ($.inArray(keyword, MyApp.keywords) === -1 && keyword.length !== 0) {
                 MyApp.keywords.push(keyword);
             }
+            */
         });
 
-        MyApp.keywords.sort();
+        //MyApp.keywords.sort();
 
         createDataTable();
-        addFilters();
-        abstractPopup();
+        //addFilters();
+        //abstractPopup();
     });
 })
-
-function GenerateTitleColumn(entry) { //entry value from spreadsheet
-    var title = entry.gsx$title.$t;
-    var abstract = entry.gsx$abstract.$t;
-    var link = entry.gsx$linkstowhat.$t;
-
-    return "<a href='" + link + "' class='abstract-popover' data-toggle='popover' data-content='" + abstract + "' data-original-title='Abstract'>" + title + "</a>";
-}
 
 function abstractPopup() {
     $("#spreadsheet").popover({
@@ -134,8 +125,8 @@ function createDataTable() {
 
     MyApp.oTable = $("#spreadsheet").dataTable({
         "aoColumnDefs": [
-            { "sType": "link-content", "aTargets": [ 0 ] },
-            { "bVisible": false, "aTargets": [ -1 ] } //hide the keywords column for now (the last column, hence -1)
+            //{ "sType": "link-content", "aTargets": [ 0 ] },
+            //{ "bVisible": false, "aTargets": [ -1 ] } //hide the keywords column for now (the last column, hence -1)
         ],
         "iDisplayLength": 20,
         "bLengthChange": false,
