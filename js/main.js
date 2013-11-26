@@ -64,7 +64,7 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
     //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
     var allResearchInfo = val.gsx$positiontitle.$t + ', ' + val.gsx$telephone.$t + ', ' + val.gsx$researchareas.$t;
 
-    var content = research; //could expand content later
+    var content = allResearchInfo; //could expand content later
     var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a>";
         
     return researcher;
