@@ -16,14 +16,14 @@ $(function () {
             var name = val.gsx$name.$t;
             var organization = val.gsx$organization.$t;
             var dept = val.gsx$departmentprogram.$t;
-            var city = val.gsx$citytown.$t + ', ' val.gsx$state.$t;
+            var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
             var project = val.gsx$project1title.$t;
 
             // var allResearchInfo = val.gsx$gsx:positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br />' + val.gsx$researchareas.$t;
             
             MyApp.spreadsheetData.push(
                 [
-                    GenerateResearcherColumn(val), 
+                    // GenerateResearcherColumn(val), 
                     organization, dept, city, project
                 ]);
 
@@ -37,7 +37,7 @@ $(function () {
         //MyApp.keywords.sort();
 
         createDataTable();
-        researcherPopup();
+        // researcherPopup();
         //addFilters();
         //abstractPopup();
     });
