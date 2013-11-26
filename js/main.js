@@ -62,7 +62,7 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
         
     //var website = "<a target='_blank' href='" + val.gsx$website.$t + "'>" + val.gsx$website.$t + "</a>";
     //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
-    var allResearchInfo = val.gsx$gsx:positiontitle.$t + ", " + val.gsx$telephone.$t + ", " + val.gsx$researchareas.$t;
+    var allResearchInfo = val.gsx$positiontitle.$t + ", " + val.gsx$telephone.$t + ", " + val.gsx$researchareas.$t;
 
     var content = research; //could expand content later
     var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a>";
