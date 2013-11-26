@@ -14,8 +14,8 @@ $(function () {
     $.getJSON(url, {}, function (data) {
         $.each(data.feed.entry, function (key, val) {
             var name = val.gsx$name.$t;
-            var organization = val.gsx$departmentprogram.$t + '<br />' + val.gsx$organization.$t;
-            var contact = val.gsx$email.$t + '<br />' + val.gsx$personalwebsitelink.$t;
+            var organization = val.gsx$departmentprogram.$t + '<br /><span class="discreet">' + val.gsx$organization.$t + '</span>';
+            var contact = val.gsx$telephone.$t + '<br />' + val.gsx$email.$t + '<br />' + val.gsx$personalwebsitelink.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
             var project = val.gsx$project1title.$t;
 
@@ -63,7 +63,7 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
         
     //var website = "<a target='_blank' href='" + val.gsx$website.$t + "'>" + val.gsx$website.$t + "</a>";
     //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
-    var allResearchInfo = val.gsx$telephone.$t + '<br /><br />' + val.gsx$researchareas.$t;
+    var allResearchInfo = val.gsx$researchareas.$t;
 
     var content = allResearchInfo; //could expand content later
     var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a><br /><span class='discreet'>" + title + "</span>";
