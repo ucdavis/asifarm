@@ -2,7 +2,7 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Department / Program" }, { "sTitle": "Project" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Department / Program" }, { "sTitle": "City" }, { "sTitle": "Project" }
 ];
 
 String.prototype.trunc = function (n) {
@@ -16,11 +16,12 @@ $(function () {
             var name = val.gsx$name.$t;
             var organization = val.gsx$organization.$t;
             var dept = val.gsx$departmentprogram.$t;
+            var city = val.gsx$citytown.$t;
             var project = val.gsx$project1title.$t;
             
             MyApp.spreadsheetData.push(
                 [
-                    name, organization, dept, project
+                    name, organization, dept, city, project
                 ]);
 
             /*
