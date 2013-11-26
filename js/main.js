@@ -16,12 +16,15 @@ $(function () {
             var name = val.gsx$name.$t;
             var organization = val.gsx$organization.$t;
             var dept = val.gsx$departmentprogram.$t;
-            var city = val.gsx$citytown.$t;
+            var city = val.gsx$citytown.$t + ', ' val.gsx$state.$t;
             var project = val.gsx$project1title.$t;
+
+            // var allResearchInfo = val.gsx$gsx:positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br />' + val.gsx$researchareas.$t;
             
             MyApp.spreadsheetData.push(
                 [
-                    name, organization, dept, city, project
+                    GenerateResearcherColumn(val), 
+                    organization, dept, city, project
                 ]);
 
             /*
@@ -34,6 +37,7 @@ $(function () {
         //MyApp.keywords.sort();
 
         createDataTable();
+        researcherPopup();
         //addFilters();
         //abstractPopup();
     });
@@ -44,6 +48,26 @@ function abstractPopup() {
         selector: '.abstract-popover',
         trigger: 'hover'
     });
+}
+
+function researcherPopup(){
+    $("#spreadsheet").popover({ 
+        selector: '.researcher-popover',
+        trigger: 'hover'
+    });
+}
+
+function GenerateResearcherColumn(val /* entry value from spreadsheet */){
+    var name = val.gsx$researchername.$t;
+        
+    //var website = "<a target='_blank' href='" + val.gsx$website.$t + "'>" + val.gsx$website.$t + "</a>";
+    //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
+    var allResearchInfo = val.gsx$gsx:positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br />' + val.gsx$researchareas.$t;
+
+    var content = research; //could expand content later
+    var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a>";
+        
+    return researcher;
 }
 
 function addFilters(){
