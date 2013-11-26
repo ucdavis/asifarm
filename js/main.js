@@ -24,7 +24,7 @@ $(function () {
             MyApp.spreadsheetData.push(
                 [
                     // GenerateResearcherColumn(val), 
-                    organization, dept, city, project
+                    name, organization, dept, city, project
                 ]);
 
             /*
