@@ -2,7 +2,7 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Department / Program" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Project" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Project" }
 ];
 
 String.prototype.trunc = function (n) {
@@ -14,8 +14,7 @@ $(function () {
     $.getJSON(url, {}, function (data) {
         $.each(data.feed.entry, function (key, val) {
             var name = val.gsx$name.$t;
-            var organization = val.gsx$organization.$t;
-            var dept = val.gsx$departmentprogram.$t;
+            var organization = val.gsx$departmentprogram.$t + '<br />' + val.gsx$organization.$t;
             var contact = val.gsx$email.$t + '<br />' + val.gsx$personalwebsitelink.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
             var project = val.gsx$project1title.$t;
@@ -25,7 +24,7 @@ $(function () {
             MyApp.spreadsheetData.push(
                 [
                     GenerateResearcherColumn(val), 
-                    organization, dept, contact, city, project
+                    organization, contact, city, project
                 ]);
 
             /*
@@ -60,13 +59,14 @@ function researcherPopup(){
 
 function GenerateResearcherColumn(val /* entry value from spreadsheet */){
     var name = val.gsx$name.$t;
+    var title = val.gsx$positiontitle.$t;
         
     //var website = "<a target='_blank' href='" + val.gsx$website.$t + "'>" + val.gsx$website.$t + "</a>";
     //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
-    var allResearchInfo = val.gsx$positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br /><br />' + val.gsx$researchareas.$t;
+    var allResearchInfo = val.gsx$telephone.$t + '<br /><br />' + val.gsx$researchareas.$t;
 
     var content = allResearchInfo; //could expand content later
-    var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a>";
+    var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a><br /><span class='discreet'>" + title + "</span>";
         
     return researcher;
 }
