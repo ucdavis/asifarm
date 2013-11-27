@@ -2,8 +2,10 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Project" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Project" }, { "sTitle": "organizations" }
 ];
+MyApp.filterIndexes = { "organizations": 1 };
+MyApp.Organizations = [];
 
 String.prototype.trunc = function (n) {
     return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
@@ -14,20 +16,25 @@ $(function () {
     $.getJSON(url, {}, function (data) {
         $.each(data.feed.entry, function (key, val) {
             var name = val.gsx$name.$t;
-            var organization = val.gsx$departmentprogram.$t + '<br /><span class="discreet">' + val.gsx$organization.$t + '</span>';
+            var dept = val.gsx$departmentprogram.$t + '<br /><span class="discreet">' + val.gsx$organization.$t + '</span>';
+            var orgtype = val.gsx$typeoforganization.$t;
             var website = "<a target='_blank' href='" + val.gsx$personalwebsitelink.$t + "'><i class='icon-globe'></i></a>";
             var email = "<a href='mailto:" + val["gsx$email"].$t + "'><i class='icon-envelope'></i></a>";
             var contact = email + ' ' + website + '<br />' + val.gsx$telephone.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
-            var project = val.gsx$project1title.$t;
+            var project = val.gsx$project1title.$t.trunc(25);
 
             // var allResearchInfo = val.gsx$gsx:positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br />' + val.gsx$researchareas.$t;
             
             MyApp.spreadsheetData.push(
                 [
                     GenerateResearcherColumn(val), 
-                    organization, contact, city, project
+                    dept, contact, city, project, orgtype
                 ]);
+
+            if ($.inArray(orgtype, MyApp.Organizations) === -1 && orgtype.length !== 0) {
+                MyApp.Organizations.push(orgtype);
+            }
 
             /*
             if ($.inArray(keyword, MyApp.keywords) === -1 && keyword.length !== 0) {
@@ -36,26 +43,88 @@ $(function () {
             */
         });
 
+        MyApp.Organizations.sort();
         //MyApp.keywords.sort();
 
         createDataTable();
+        addFilters();
         researcherPopup();
-        //addFilters();
-        //abstractPopup();
     });
 })
 
-function abstractPopup() {
-    $("#spreadsheet").popover({
-        selector: '.abstract-popover',
-        trigger: 'hover'
+function hideUnavailableOrganizations(){
+    var fileredData = MyApp.oTable._('tr', {"filter":"applied"});
+
+    //Get departments available after the filters are set
+    MyApp.Organizations = [];
+    $.each(fileredData, function (key, val) {
+        var org = val[MyApp.filterIndexes["organizations"]];
+
+        if ($.inArray(org, MyApp.Organizations) === -1 && org.length !== 0) {
+                MyApp.Organizations.push(org);
+        }
     });
+
+    // $(":checkbox", "#organizations").each(function () {
+    //     //if a checkbox isn't in the list of available departments, hide it
+    //     if ($.inArray(this.name, MyApp.Organizations) === -1) {
+    //         $(this).parent().css("display", "none");
+    //     } else {
+    //         $(this).parent().css("display", "block");
+    //     }
+    // });
 }
+
 
 function researcherPopup(){
     $("#spreadsheet").popover({ 
         selector: '.researcher-popover',
         trigger: 'hover'
+    });
+}
+
+
+
+function addFilters(){
+    var $filter = $("#filter_elements");
+    
+    $.each(MyApp.Organizations, function (key, val) {
+        $filter.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
+    });
+
+
+
+    $(".filterrow").on("click", "ul.filterlist", function (e) {
+        var filterRegex = "";
+        var filterName = this.id;
+        var filterIndex = MyApp.filterIndexes[filterName];
+        
+        var filters = [];
+        $("input", this).each(function (key, val) {
+            if (val.checked) {
+                if (filterRegex.length !== 0) {
+                    filterRegex += "|";
+                }
+
+                filterRegex += val.name ; //Use the hat and dollar to require an exact match                
+            }
+        });
+
+        MyApp.oTable.fnFilter(filterRegex, filterIndex, true, false);
+        hideUnavailableOrganizations();
+        displayCurrentFilters();
+    });
+
+    $("#clearfilters").click(function (e) {
+        e.preventDefault();
+
+        $(":checkbox", "ul.filterlist").each(function () {
+            this.checked = false;
+        });
+
+        $("#researchfilter").val(0);
+
+        $("ul.filterlist").click();
     });
 }
 
@@ -73,45 +142,7 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
     return researcher;
 }
 
-function addFilters(){
-    var $filter = $("#filter_elements");
-    
-    $.each(MyApp.keywords, function (key, val) {
-        $filter.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
-    });
-        
-    $filter.on("change", function (e) {
-        e.preventDefault();
-        var selected = this.name;
 
-        var filterRegex = "";
-        var filters = [];
-
-        $("input:checkbox", this).each(function (key, val) {
-            if (val.checked) {
-                if (filterRegex.length !== 0) {
-                    filterRegex += "|";
-                }
-
-                filterRegex += "(^" + val.name + "$)"; //Use the hat and dollar to require an exact match
-            }
-        });
-
-        console.log(filterRegex);
-        MyApp.oTable.fnFilter(filterRegex, 4, true, false);
-        displayCurrentFilters();
-    });
-
-    $("#clearfilters").click(function (e) {
-        e.preventDefault();
-
-        $(":checkbox", $filter).each(function () {
-            this.checked = false;
-        });
-
-        $filter.change();
-    });
-}
 
 function displayCurrentFilters() {
     var $filterAlert = $("#filters");
