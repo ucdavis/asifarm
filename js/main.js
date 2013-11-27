@@ -15,7 +15,9 @@ $(function () {
         $.each(data.feed.entry, function (key, val) {
             var name = val.gsx$name.$t;
             var organization = val.gsx$departmentprogram.$t + '<br /><span class="discreet">' + val.gsx$organization.$t + '</span>';
-            var contact = val.gsx$telephone.$t + '<br />' + val.gsx$email.$t + '<br />' + val.gsx$personalwebsitelink.$t;
+            var website = "<a target='_blank' href='" + val.gsx$personalwebsitelink.$t + "'><i class='icon-globe'></i></a>";
+            var email = "<a href='mailto:" + val["gsx$email"].$t + "'><i class='icon-envelope'></i></a>";
+            var contact = email + ' ' + website + '<br />' + val.gsx$telephone.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
             var project = val.gsx$project1title.$t;
 
