@@ -20,7 +20,7 @@ $(function () {
             var orgtype = val.gsx$typeoforganization.$t;
             var website = "<a target='_blank' href='" + val.gsx$personalwebsitelink.$t + "'><i class='icon-globe'></i></a>";
             var email = "<a href='mailto:" + val["gsx$email"].$t + "'><i class='icon-envelope'></i></a>";
-            var contact = email + ' ' + website + '<br />' + val.gsx$telephone.$t;
+            var contact = email + ' ' + (val.gsx$personalwebsitelink.$t ? website : '') + '<br />' + val.gsx$telephone.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
             var project = val.gsx$project1title.$t.trunc(25);
 
