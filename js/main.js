@@ -185,7 +185,7 @@ function createDataTable() {
     MyApp.oTable = $("#spreadsheet").dataTable({
         "aoColumnDefs": [
             //{ "sType": "link-content", "aTargets": [ 0 ] },
-            //{ "bVisible": false, "aTargets": [ -1 ] } //hide the keywords column for now (the last column, hence -1)
+            { "bVisible": false, "aTargets": [ -1 ] } //hide the keywords column for now (the last column, hence -1)
         ],
         "iDisplayLength": 20,
         "bLengthChange": false,
