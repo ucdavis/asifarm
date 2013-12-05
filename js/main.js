@@ -2,10 +2,10 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Projects" }, { "sTitle": "region" }, { "sTitle": "organizations" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Projects" }, { "sTitle": "region" }, { "sTitle": "organizations" }, { "sTitle": "researchareas" }
 ];
-MyApp.filterIndexes = { "organizations": 1, "regions": 2 };
-MyApp.Organizations = [], MyApp.Regions = [];
+MyApp.filterIndexes = { "organizations": 1, "regions": 2, "researcharea" : 3 };
+MyApp.Organizations = [], MyApp.Regions = [], MyApp.ResearchAreas = [];
 
 String.prototype.trunc = function (n) {
     return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
@@ -23,6 +23,7 @@ $(function () {
             var contact = email + ' ' + (val.gsx$personalwebsitelink.$t ? website : '') + '<br />' + val.gsx$telephone.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
             var region = val.gsx$region.$t;
+            var researchareas = val.gsx$researchareas.$t;
 
             // var allResearchInfo = val.gsx$gsx:positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br />' + val.gsx$researchareas.$t;
             
@@ -31,7 +32,7 @@ $(function () {
                     GenerateResearcherColumn(val), 
                     dept, contact, city, 
                     GenerateProjectColumn(val), 
-                    region, orgtype
+                    region, orgtype, researchareas
                 ]);
 
             if ($.inArray(orgtype, MyApp.Organizations) === -1 && orgtype.length !== 0) {
@@ -46,6 +47,24 @@ $(function () {
                 MyApp.keywords.push(keyword);
             }
             */
+
+            /* DOH */
+            $.each(MyApp.ResearchAreas, function (researchAreaName, researchAreaCollection) {
+                var researchArea = val.gsx$researchareas.$t;
+                console.log("Wat");
+
+                //Add the keywords, which are semi-colon separated. First trim them and then replace the CRLF, then split.
+                $.each(researchArea.trim().replace(/^[\r\n]+|\.|[\r\n]+$/g, "").split(','), function (key, val) {
+                    val = val.trim(); //need to trim the semi-colon separated values after split
+
+                    if ($.inArray(val, MyApp.ResearchAreas) === -1 && val.length !== 0) {
+                        MyApp.ResearchAreas.push(val);
+
+                    }
+                });
+
+                MyApp.ResearchAreas.sort();
+            });
         });
 
         MyApp.Organizations.sort();
@@ -111,6 +130,34 @@ function addFilters(){
     $.each(MyApp.Regions, function (key, val) {
         $region.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
     });
+
+
+    //Create a select box with all research areas by category
+    var $researcharea = $("#researcharea");
+
+    var researchSelect = "<select id='researchfilter'><option value=''>--No Research Area Filter--</option>";
+
+    $.each(MyApp.ResearchAreas, function (category, researchAreas) {
+        $.each(researchAreas.values, function (k, researchArea) {
+            researchSelect += "<option>" + researchArea + "</option>";
+        });
+    });
+
+    researchSelect += "</select>";
+
+    $researcharea.append(researchSelect);
+
+    $("#researcharea").on("change", "#researchfilter", function (e) {
+        var selected = $("#researchfilter").val();
+
+        //can match anywhere in keyword list, replace open/close parens with leading escape slash
+        var filterRegex = "(" + selected.replace("(", "\\(").replace(")", "\\)") + ")";
+
+        MyApp.oTable.fnFilter(filterRegex, MyApp.filterIndexes["researcharea"], true, false);
+        hideUnavailableDepartments();
+        displayCurrentFilters();
+    });
+
 
 
     $(".filterrow").on("click", "ul.filterlist", function (e) {
@@ -231,7 +278,7 @@ function createDataTable() {
     MyApp.oTable = $("#spreadsheet").dataTable({
         "aoColumnDefs": [
             //{ "sType": "link-content", "aTargets": [ 0 ] },
-            { "bVisible": false, "aTargets": [ -1, -2 ] } //hide the keywords column for now (the last column, hence -1)
+            // { "bVisible": false, "aTargets": [ -1, -2 ] } //hide the keywords column for now (the last column, hence -1)
         ],
         "iDisplayLength": 20,
         "bLengthChange": false,
