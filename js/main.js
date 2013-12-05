@@ -2,10 +2,10 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Project" }, { "sTitle": "organizations" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Projects" }, { "sTitle": "region" }, { "sTitle": "organizations" }
 ];
-MyApp.filterIndexes = { "organizations": 1 };
-MyApp.Organizations = [];
+MyApp.filterIndexes = { "organizations": 1, "regions": 2 };
+MyApp.Organizations = [], MyApp.Regions = [];
 
 String.prototype.trunc = function (n) {
     return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
@@ -22,18 +22,23 @@ $(function () {
             var email = "<a href='mailto:" + val["gsx$email"].$t + "'><i class='icon-envelope'></i></a>";
             var contact = email + ' ' + (val.gsx$personalwebsitelink.$t ? website : '') + '<br />' + val.gsx$telephone.$t;
             var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
-            var project = val.gsx$project1title.$t.trunc(25);
+            var region = val.gsx$region.$t;
 
             // var allResearchInfo = val.gsx$gsx:positiontitle.$t + '<br />' + val.gsx$telephone.$t + '<br />' + val.gsx$researchareas.$t;
             
             MyApp.spreadsheetData.push(
                 [
                     GenerateResearcherColumn(val), 
-                    dept, contact, city, project, orgtype
+                    dept, contact, city, 
+                    GenerateProjectColumn(val), 
+                    region, orgtype
                 ]);
 
             if ($.inArray(orgtype, MyApp.Organizations) === -1 && orgtype.length !== 0) {
                 MyApp.Organizations.push(orgtype);
+            }
+            if ($.inArray(region, MyApp.Regions) === -1 && region.length !== 0) {
+                MyApp.Regions.push(region);
             }
 
             /*
@@ -44,11 +49,13 @@ $(function () {
         });
 
         MyApp.Organizations.sort();
+        MyApp.Regions.sort();
         //MyApp.keywords.sort();
 
         createDataTable();
         addFilters();
         researcherPopup();
+        projectPopup();
     });
 })
 
@@ -83,6 +90,13 @@ function researcherPopup(){
     });
 }
 
+function projectPopup(){
+    $("#spreadsheet").popover({ 
+        selector: '.project-popover',
+        trigger: 'hover'
+    });
+}
+
 
 
 function addFilters(){
@@ -92,6 +106,11 @@ function addFilters(){
         $filter.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
     });
 
+    var $region = $("#regions");
+    
+    $.each(MyApp.Regions, function (key, val) {
+        $region.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
+    });
 
 
     $(".filterrow").on("click", "ul.filterlist", function (e) {
@@ -134,7 +153,7 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
         
     //var website = "<a target='_blank' href='" + val.gsx$website.$t + "'>" + val.gsx$website.$t + "</a>";
     //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
-    var allResearchInfo = val.gsx$researchareas.$t;
+    var allResearchInfo = "Research areas: " + val.gsx$researchareas.$t;
 
     var content = allResearchInfo; //could expand content later
     var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a><br /><span class='discreet'>" + title + "</span>";
@@ -142,12 +161,39 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
     return researcher;
 }
 
+function GenerateProjectColumn(val /* entry value from spreadsheet */){
+    var project1title = "<span style='font-size: 0.8em;'>" + val.gsx$project1title.$t.trunc(20) + "</span>";
+    var project1details = "Status: " + val.gsx$expectedcompletiondate.$t + (val.gsx$linktoprojectwebsite.$t ? "—" + val.gsx$linktoprojectwebsite.$t : '');
+    var project1 = "<a href='#' class='project-popover' data-toggle='popover' data-content='" + project1details + "' data-original-title='" + val.gsx$project1title.$t + "'>" + project1title + "</a>";
+
+    var project2title = "<br />" + "<span style='font-size: 0.8em;'>" + val.gsx$project2title.$t.trunc(20) + "</span>";
+    var project2details = "Status: " + val.gsx$expectedcompletiondate_2.$t + (val.gsx$linktoprojectwebsite_2.$t ? "—" + val.gsx$linktoprojectwebsite_2.$t : '');
+    var project2 = "<a href='#' class='project-popover' data-toggle='popover' data-content='" + project2details + "' data-original-title='" + val.gsx$project2title.$t + "'>" + project2title + "</a>";
+
+    var project3title = "<br />" + "<span style='font-size: 0.8em;'>" + val.gsx$project3title.$t.trunc(20) + "</span>";
+    var project3details = "Status: " + val.gsx$expectedcompletiondate_3.$t + (val.gsx$linktoprojectwebsite_3.$t ? "—" + val.gsx$linktoprojectwebsite_3.$t : '');
+    var project3 = "<a href='#' class='project-popover' data-toggle='popover' data-content='" + project3details + "' data-original-title='" + val.gsx$project3title.$t + "'>" + project3title + "</a>";
+
+    var projects = project1 + (val.gsx$project2title.$t ? project2 : '') + (val.gsx$project3title.$t ? project3 : '');
+        
+    var allResearchInfo = val.gsx$researchareas.$t;
+
+    // var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a><br /><span class='discreet'>" + title + "</span>";
+        
+    return projects;
+}
+
 
 
 function displayCurrentFilters() {
     var $filterAlert = $("#filters");
+    var regionFilter = $("#regions"); // Wrong selector..?
     
     var filters = "";
+
+    if (regionFilter){
+        filters += "<strong>" + this.name + "</strong>";
+    }
     
     $(":checked", "#filter_elements").each(function () {
         if (filters.length !== 0) {
@@ -185,7 +231,7 @@ function createDataTable() {
     MyApp.oTable = $("#spreadsheet").dataTable({
         "aoColumnDefs": [
             //{ "sType": "link-content", "aTargets": [ 0 ] },
-            { "bVisible": false, "aTargets": [ -1 ] } //hide the keywords column for now (the last column, hence -1)
+            { "bVisible": false, "aTargets": [ -1, -2 ] } //hide the keywords column for now (the last column, hence -1)
         ],
         "iDisplayLength": 20,
         "bLengthChange": false,
