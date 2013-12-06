@@ -73,8 +73,7 @@ $(function () {
 
         createDataTable();
         addFilters();
-        researcherPopup();
-        projectPopup();
+        configurePopups();
     });
 })
 
@@ -102,16 +101,9 @@ function hideUnavailableOrganizations(){
 }
 
 
-function researcherPopup(){
+function configurePopups(){
     $("#spreadsheet").popover({ 
-        selector: '.researcher-popover',
-        trigger: 'hover'
-    });
-}
-
-function projectPopup(){
-    $("#spreadsheet").popover({ 
-        selector: '.project-popover',
+        selector: '.researcher-popover, .project-popover',
         trigger: 'hover'
     });
 }
