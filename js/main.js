@@ -4,7 +4,7 @@ MyApp.keywords = [];
 MyApp.headerData = [
     { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Projects" }, { "sTitle": "region" }, { "sTitle": "organizations" }, { "sTitle": "researchareas" }
 ];
-MyApp.filterIndexes = { "organizations": 1, "regions": 2, "researcharea" : 3 };
+MyApp.filterIndexes = { "organizations": 6, "regions": 5, "researcharea" : 3 };
 MyApp.Organizations = [], MyApp.Regions = [], MyApp.ResearchAreas = [];
 
 String.prototype.trunc = function (n) {
@@ -111,10 +111,10 @@ function configurePopups(){
 
 
 function addFilters(){
-    var $filter = $("#filter_elements");
+    var $organizations = $("#organizations");
     
     $.each(MyApp.Organizations, function (key, val) {
-        $filter.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
+        $organizations.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
     });
 
     var $region = $("#regions");
@@ -164,7 +164,7 @@ function addFilters(){
                     filterRegex += "|";
                 }
 
-                filterRegex += val.name ; //Use the hat and dollar to require an exact match                
+                filterRegex += val.name; //Use the hat and dollar to require an exact match                
             }
         });
 
@@ -226,15 +226,17 @@ function GenerateProjectColumn(val /* entry value from spreadsheet */){
 
 function displayCurrentFilters() {
     var $filterAlert = $("#filters");
-    var regionFilter = $("#regions"); // Wrong selector..?
+    //var regionFilter = $("#regions"); // Wrong selector..?
     
     var filters = "";
 
+    /*
     if (regionFilter){
         filters += "<strong>" + this.name + "</strong>";
     }
-    
-    $(":checked", "#filter_elements").each(function () {
+    */
+
+    $("input:checked", "#filterAccordian").each(function () {
         if (filters.length !== 0) {
             filters += " + "
         }
