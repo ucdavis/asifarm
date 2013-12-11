@@ -2,7 +2,7 @@
 MyApp.spreadsheetData = [];
 MyApp.keywords = [];
 MyApp.headerData = [
-    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "Projects" }, { "sTitle": "region" }, { "sTitle": "organizations" }, { "sTitle": "researchareas" }
+    { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Projects" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "region" }, { "sTitle": "organizations" }, { "sTitle": "researchareas" }
 ];
 MyApp.filterIndexes = { "organizations": 6, "regions": 5, "researcharea" : 3 };
 MyApp.Organizations = [], MyApp.Regions = [], MyApp.ResearchAreas = [];
@@ -30,8 +30,9 @@ $(function () {
             MyApp.spreadsheetData.push(
                 [
                     GenerateResearcherColumn(val), 
-                    dept, contact, city, 
+                    dept, 
                     GenerateProjectColumn(val), 
+                    contact, city, 
                     region, orgtype, researchareas
                 ]);
 
@@ -272,7 +273,7 @@ function createDataTable() {
     MyApp.oTable = $("#spreadsheet").dataTable({
         "aoColumnDefs": [
             //{ "sType": "link-content", "aTargets": [ 0 ] },
-            // { "bVisible": false, "aTargets": [ -1, -2 ] } //hide the keywords column for now (the last column, hence -1)
+            { "bVisible": false, "aTargets": [ -2, -3, -1 ] } //hide the keywords column for now (the last column, hence -1)
         ],
         "iDisplayLength": 20,
         "bLengthChange": false,
