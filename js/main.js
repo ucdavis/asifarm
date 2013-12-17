@@ -50,15 +50,12 @@ $(function () {
             */
 
             /* DOH */
-            console.log(researchareas);
-
             //Add the keywords, which are semi-colon separated. First trim them and then replace the CRLF, then split.
             $.each(researchareas.trim().replace(/^[\r\n]+|\.|[\r\n]+$/g, "").split(';'), function (key, val) {
                 val = val.trim(); //need to trim the semi-colon separated values after split
                 
                 if ($.inArray(val, MyApp.ResearchAreas) === -1 && val.length !== 0) {
                     MyApp.ResearchAreas.push(val);
-
                 }
             });
 
