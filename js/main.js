@@ -50,22 +50,20 @@ $(function () {
             */
 
             /* DOH */
-            $.each(MyApp.ResearchAreas, function (researchAreaName, researchAreaCollection) {
-                var researchArea = val.gsx$researchareas.$t;
-                console.log("Wat");
+            console.log(researchareas);
 
-                //Add the keywords, which are semi-colon separated. First trim them and then replace the CRLF, then split.
-                $.each(researchArea.trim().replace(/^[\r\n]+|\.|[\r\n]+$/g, "").split(','), function (key, val) {
-                    val = val.trim(); //need to trim the semi-colon separated values after split
+            //Add the keywords, which are semi-colon separated. First trim them and then replace the CRLF, then split.
+            $.each(researchareas.trim().replace(/^[\r\n]+|\.|[\r\n]+$/g, "").split(';'), function (key, val) {
+                val = val.trim(); //need to trim the semi-colon separated values after split
+                
+                if ($.inArray(val, MyApp.ResearchAreas) === -1 && val.length !== 0) {
+                    MyApp.ResearchAreas.push(val);
 
-                    if ($.inArray(val, MyApp.ResearchAreas) === -1 && val.length !== 0) {
-                        MyApp.ResearchAreas.push(val);
-
-                    }
-                });
-
-                MyApp.ResearchAreas.sort();
+                }
             });
+
+            MyApp.ResearchAreas.sort();
+
         });
 
         MyApp.Organizations.sort();
@@ -118,6 +116,7 @@ function addFilters(){
         $organizations.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
     });
 
+
     var $region = $("#regions");
     
     $.each(MyApp.Regions, function (key, val) {
@@ -125,32 +124,11 @@ function addFilters(){
     });
 
 
-    //Create a select box with all research areas by category
     var $researcharea = $("#researcharea");
-
-    var researchSelect = "<select id='researchfilter'><option value=''>--No Research Area Filter--</option>";
-
-    $.each(MyApp.ResearchAreas, function (category, researchAreas) {
-        $.each(researchAreas.values, function (k, researchArea) {
-            researchSelect += "<option>" + researchArea + "</option>";
-        });
+    
+    $.each(MyApp.ResearchAreas, function (key, val) {
+        $researcharea.append('<li><label><input type="checkbox" name="' + val + '"> ' + val + '</label></li>');
     });
-
-    researchSelect += "</select>";
-
-    $researcharea.append(researchSelect);
-
-    $("#researcharea").on("change", "#researchfilter", function (e) {
-        var selected = $("#researchfilter").val();
-
-        //can match anywhere in keyword list, replace open/close parens with leading escape slash
-        var filterRegex = "(" + selected.replace("(", "\\(").replace(")", "\\)") + ")";
-
-        MyApp.oTable.fnFilter(filterRegex, MyApp.filterIndexes["researcharea"], true, false);
-        hideUnavailableDepartments();
-        displayCurrentFilters();
-    });
-
 
 
     $(".filterrow").on("click", "ul.filterlist", function (e) {
@@ -181,8 +159,6 @@ function addFilters(){
             this.checked = false;
         });
 
-        $("#researchfilter").val(0);
-
         $("ul.filterlist").click();
     });
 }
@@ -193,7 +169,8 @@ function GenerateResearcherColumn(val /* entry value from spreadsheet */){
         
     //var website = "<a target='_blank' href='" + val.gsx$website.$t + "'>" + val.gsx$website.$t + "</a>";
     //var email = "<a href='mailto:" + val["gsx$e-mail"].$t + "'>" + val["gsx$e-mail"].$t + "</a>";
-    var allResearchInfo = "Research areas: " + val.gsx$researchareas.$t;
+    // var allResearchInfo = "Research areas: " + val.gsx$researchareas.$t;
+    var allResearchInfo = val.gsx$researchareas.$t;
 
     var content = allResearchInfo; //could expand content later
     var researcher = "<a href='#' class='researcher-popover' data-toggle='popover' data-content='" + allResearchInfo + "' data-original-title='" + name + "'>" + name + "</a><br /><span class='discreet'>" + title + "</span>";
