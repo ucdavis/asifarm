@@ -180,11 +180,11 @@ function GenerateProjectColumn(val /* entry value from spreadsheet */){
     var project1details = "Status: " + val.gsx$expectedcompletiondate.$t + (val.gsx$linktoprojectwebsite.$t ? "—" + val.gsx$linktoprojectwebsite.$t : '');
     var project1 = "<a href='#' class='project-popover' data-toggle='popover' data-content='" + project1details + "' data-original-title='" + val.gsx$project1title.$t + "'>" + project1title + "</a>";
 
-    var project2title = "<br />" + "<span style='font-size: 0.8em;'>" + val.gsx$project2title.$t.trunc(20) + "</span>";
+    var project2title = "<span style='font-size: 0.8em;'>" + val.gsx$project2title.$t.trunc(20) + "</span>";
     var project2details = "Status: " + val.gsx$expectedcompletiondate_2.$t + (val.gsx$linktoprojectwebsite_2.$t ? "—" + val.gsx$linktoprojectwebsite_2.$t : '');
     var project2 = "<a href='#' class='project-popover' data-toggle='popover' data-content='" + project2details + "' data-original-title='" + val.gsx$project2title.$t + "'>" + project2title + "</a>";
 
-    var project3title = "<br />" + "<span style='font-size: 0.8em;'>" + val.gsx$project3title.$t.trunc(20) + "</span>";
+    var project3title = "<span style='font-size: 0.8em;'>" + val.gsx$project3title.$t.trunc(20) + "</span>";
     var project3details = "Status: " + val.gsx$expectedcompletiondate_3.$t + (val.gsx$linktoprojectwebsite_3.$t ? "—" + val.gsx$linktoprojectwebsite_3.$t : '');
     var project3 = "<a href='#' class='project-popover' data-toggle='popover' data-content='" + project3details + "' data-original-title='" + val.gsx$project3title.$t + "'>" + project3title + "</a>";
 

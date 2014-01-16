@@ -13,7 +13,12 @@
 }
 
 
-
+a.project-popover {
+	vertical-align: top;
+}
+a.project-popover span {
+	line-height: 1em; padding: 0.5em 0; display: block;
+}
 
 
 
