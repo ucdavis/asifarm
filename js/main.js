@@ -4,7 +4,7 @@ MyApp.keywords = [];
 MyApp.headerData = [
     { "sTitle": "Name" }, { "sTitle": "Organization" }, { "sTitle": "Projects" }, { "sTitle": "Contact" }, { "sTitle": "City" }, { "sTitle": "region" }, { "sTitle": "organizations" }, { "sTitle": "researchareas" }
 ];
-MyApp.filterIndexes = { "organizations": 6, "regions": 5, "researcharea" : 3 };
+MyApp.filterIndexes = { "organizations": 6, "regions": 5, "researcharea" : 7 };
 MyApp.Organizations = [], MyApp.Regions = [], MyApp.ResearchAreas = [];
 
 String.prototype.trunc = function (n) {
@@ -132,7 +132,7 @@ function addFilters(){
         var filterRegex = "";
         var filterName = this.id;
         var filterIndex = MyApp.filterIndexes[filterName];
-        
+
         var filters = [];
         $("input", this).each(function (key, val) {
             if (val.checked) {
