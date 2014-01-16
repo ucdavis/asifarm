@@ -21,7 +21,7 @@ $(function () {
             var website = "<a target='_blank' href='" + val.gsx$personalwebsitelink.$t + "'><i class='icon-globe'></i></a>";
             var email = "<a href='mailto:" + val["gsx$email"].$t + "'><i class='icon-envelope'></i></a>";
             var contact = email + ' ' + (val.gsx$personalwebsitelink.$t ? website : '') + '<br />' + val.gsx$telephone.$t;
-            var city = val.gsx$citytown.$t + ', ' + val.gsx$state.$t;
+            var city = "<span class='city'>" + val.gsx$citytown.$t + ', ' + val.gsx$state.$t + "</span>";
             var region = val.gsx$region.$t;
             var researchareas = val.gsx$researchareas.$t;
 
