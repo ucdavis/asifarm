@@ -249,9 +249,11 @@ function createDataTable() {
         "aoColumnDefs": [
             //{ "sType": "link-content", "aTargets": [ 0 ] },
             { "bVisible": false, "aTargets": [ -2, -3, -1 ] }, //hide the keywords column for now (the last column, hence -1)
-            { sWidth: "50%", "aTargets": [ 2 ]  },
-			{ sWidth: "30%", "aTargets": [ 3 ]  },
-            { sWidth: "10%", "aTargets": [ 4 ]  }
+		{ sWidth: "20%", "aTargets": [ 0 ]  },
+		{ sWidth: "15%", "aTargets": [ 1 ]  },
+		{ sWidth: "30%", "aTargets": [ 2 ]  },
+		{ sWidth: "25%", "aTargets": [ 3 ]  },
+            	{ sWidth: "10%", "aTargets": [ 4 ]  }
         ],
         "iDisplayLength": 45,
         "bLengthChange": false,
