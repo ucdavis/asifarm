@@ -245,11 +245,15 @@ function createDataTable() {
     });
 
     MyApp.oTable = $("#spreadsheet").dataTable({
+        bAutoWidth: false,
         "aoColumnDefs": [
             //{ "sType": "link-content", "aTargets": [ 0 ] },
-            { "bVisible": false, "aTargets": [ -2, -3, -1 ] } //hide the keywords column for now (the last column, hence -1)
+            { "bVisible": false, "aTargets": [ -2, -3, -1 ] }, //hide the keywords column for now (the last column, hence -1)
+            { sWidth: "50%", "aTargets": [ 2 ]  },
+			{ sWidth: "30%", "aTargets": [ 3 ]  },
+            { sWidth: "10%", "aTargets": [ 4 ]  }
         ],
-        "iDisplayLength": 20,
+        "iDisplayLength": 45,
         "bLengthChange": false,
         "aaData": MyApp.spreadsheetData,
         "aoColumns": MyApp.headerData
