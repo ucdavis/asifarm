@@ -255,7 +255,7 @@ function createDataTable() {
 		{ sWidth: "25%", "aTargets": [ 3 ]  },
             	{ sWidth: "10%", "aTargets": [ 4 ]  }
         ],
-        "iDisplayLength": 45,
+        "iDisplayLength": 25,
         "bLengthChange": false,
         "aaData": MyApp.spreadsheetData,
         "aoColumns": MyApp.headerData
